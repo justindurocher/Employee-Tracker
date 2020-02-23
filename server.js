@@ -2,11 +2,14 @@ var mysql = require('mysql');
 
 var inquirier = require('inquirer');
 
+var password = require('./password');
+
 var connection = mysql.createConnection({
     host : "localhost",
     port : process.env.PORT || 3306,
     user : "root",
-    password : "Newingtonhslax3"
+    password : password,
+    database : "employees_db"
 });
 
 connection.connect(function(err){
@@ -16,9 +19,9 @@ connection.connect(function(err){
     promptQustions();
 });
 
-console.log("Welcome to the employee tracker!\n This is where you can keep track of all of your employees");
-
 function promptQustions() {
+
+    console.log("Welcome to the employee tracker!\n This is where you can keep track of all of your employees");
 
     inquirier.prompt({
 
@@ -52,15 +55,24 @@ function promptQustions() {
 
 function addEmployee() {
 
-    inquirier.prompt({
+    inquirier.prompt([
 
+      {  
         name : "firstName",
         type : "input",
         message : "What is there first name?"
+      },
+      {
+        name : "lastName",
+        type : "input",
+        message : "What is there last name?"
+      }
 
-    }).then(function(anwser){
+    ]).then(function(anwser){
 
         console.log(anwser.firstName);
+
+        connection.end();
 
     });
 
