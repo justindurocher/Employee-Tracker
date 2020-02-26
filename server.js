@@ -2,13 +2,15 @@ var mysql = require('mysql');
 
 var inquirier = require('inquirer');
 
-var password = require('./password');
+var pass = require("./password")
+
+var password = "Newingtonhslax3";
 
 var connection = mysql.createConnection({
     host : "localhost",
     port : process.env.PORT || 3306,
     user : "root",
-    password : "Newingtonhslax3",
+    password : password,
     database : "employees_db"
 });
 
@@ -83,18 +85,56 @@ function addEmployee() {
           type : "input",
           message : "What department do they work in?"
 
+      },
+      {
+          name : "role_id",
+          type: "input",
+          message : "What is their job role id?"
+      },
+      {
+          name: "Manager_id",
+          type: "input",
+          message : "If applies, what is their manager number, if not manager press enter."
       }
     
 
     ]).then(function(anwser){
 
-        console.log(anwser.firstName);
+        connection.query("INSERT INTO employee SET ?" , {
 
-        console.log(anwser.lastName);
+
+                first_name : anwser.firstName,
+                last_name : anwser.lastName,
+                job_role_id : anwser.role_id,
+                manager_id : anwser.Mananger_id
+
+        },function(error){
+
+            if (error) throw error;
+
+            console.log("Employee has been added!");
+
+        })
 
         connection.end();
 
     });
+
+
+    connection.query("INSERT INTO department SET ?" , {
+
+
+        name : anwser.firstName
+        
+},function(error){
+
+    if (error) throw error;
+
+
+})
+
+
+
 
 }
 
@@ -114,7 +154,7 @@ function updateEmployee() {
           }
     ]).then(function(anwser){
 
-        console.log(anwser.updateWho);
+        console.log(anwser.updateWho + " has been updated");
 
         connection.end();
 
@@ -130,7 +170,7 @@ function removeEmployee() {
         message : "What employee would you like to remove?"
     }).then(function(anwser){
 
-        console.log(anwser.employeeRemoved + " Has been removed");
+        console.log(anwser.employeeRemoved + " has been removed");
 
         connection.end();
 
